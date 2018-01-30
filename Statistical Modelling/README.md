@@ -1,11 +1,11 @@
 # Statistical Inference
 Applying statistical Inference on dataset "Designs"
 
-The Data set contains two different design container and need to see the 
+The Data set contains two different design container for each store
 #Question
 which design has more sale?
 
-![Screenshot](Capture.PNG)
+![Screenshot](Design.PNG)
 
 The T-stest of paired two sample means is execute in Excel 
 with help of data analysis feature
@@ -14,3 +14,20 @@ The mean difference calculated by mean 172.6-159.4=13.2
 
 Which clearly state that design 1 sale are greater then 
 design 2 by an estimate of 13.2 items each store
+So design1 should be consider
+
+
+The Data set contains two different filration agents for each batch
+#Question
+Whether the population mean impurity differs between the two filtration agents?
+
+![Screenshot](Filtration.PNG)
+
+The T-stest of paired two sample means is execute in Excel 
+with help of data analysis feature
+
+The mean difference calculated by mean 8.25-8.68=-0.43
+
+Which clearly state that Agent1 sale are less then 
+Agent2 by an estimate of 0.43 items each store
+So Agent2 should be preffer.
