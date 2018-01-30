@@ -1,4 +1,4 @@
-# SHeffield Hallam University
+# Sheffield Hallam University
 
 # Course: MSc Big Data Analytics
 
