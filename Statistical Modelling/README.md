@@ -1,5 +1,5 @@
 # Statistical Inference
-Applying statistical Inference on dataset "Designs"
+1) Applying statistical Inference on dataset "Designs"
 
 The Data set contains two different design container for each store
 #Question
@@ -20,7 +20,7 @@ If you only consider a one tail t-test for design1 it also suggest that Pvalue=0
 and should still follow design1
 
 
-The Data set contains two different filration agents for each batch
+2) The Data set contains two different filration agents for each batch
 #Question
 Whether the population mean impurity differs between the two filtration agents?
 
@@ -35,3 +35,17 @@ Which clearly state that Agent1 sale are less then
 Agent2 by an estimate of 0.43 items each store
 So Agent2 should be preffer.
 
+3) Test whether the population mean weight loss differs between the two diets
+   As the dataset record values of two different diets on each individual(i-e no one went for both diets)
+   hence Independent t test is appropriate.
+   
+   ![Screenshot](FtestDiet.PNG)
+   
+   Thus the two tailed p value P2 0.5399 state its higher then significance level of 5%, it means
+   weight loss variance of two population has equal variance, we will consider equal variance form of unrelated samples t test.
+  
+   ![Screenshot](tTestDiet.PNG)
+   
+   Here associated two tailed pvalue is 0.0028 which is in signicance level of 5%.
+   and mean is 1.63 which suggest dieat A is more productive in weight loss
+   
