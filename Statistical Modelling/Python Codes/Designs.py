@@ -14,5 +14,9 @@ dataset.describe(include ='all')
 so it wont differ'''
 np.var(dataset['Con1'], ddof=1)
 
-#to calculate variance
+#to calculate std
 np.std(dataset['Con1'],ddof=1)
+#best way to do std dev
+dataset['Con1'].std()
+#just extra (to calculate mode)
+stats.mode(dataset['Con1'])
