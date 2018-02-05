@@ -20,7 +20,7 @@ dataset
 #feeling data 2
 boxplot(dataset$Con1, dataset$Con2)
 
-![Screenshot](Boxplot Designs R.PNG)
+![Screenshot](Boxplot Designs R.png)
 
 library(psych)
 describeBy(dataset$Con1)
