@@ -1,8 +1,8 @@
 # feeling data
 dataset
 
+
 > dataset
-# A tibble: 10 x 3
    Store  Con1  Con2
    <dbl> <dbl> <dbl>
  1  1.00   141   118
@@ -17,13 +17,16 @@ dataset
 10 10.0    218   197
 
 
-#feeling data 2
+# feeling data 2
+
 boxplot(dataset$Con1, dataset$Con2)
 
-![Screenshot](Boxplot Designs R.png)
+![Screenshot](SHU/Statistical Modelling/1. Statistical Inference/R Codes/Boxplot Designs R.png)
 
 library(psych)
+
 describeBy(dataset$Con1)
+
 describeBy(dataset$Con2)
 
 > describeBy(dataset$Con1)
@@ -33,7 +36,7 @@ X1    1 10 172.6 27.39  172.5     172 34.1 132 218    86 0.07    -1.39 8.66
    vars  n  mean   sd median trimmed   mad min max range skew kurtosis   se
 X1    1 10 159.4 28.1  167.5  159.88 40.03 118 197    79 -0.1    -1.54 8.88
 
-#T test for paired sample
+# T test for paired sample
 t.test(dataset$Con1, dataset$Con2, mu=0, alt="two.sided", paired = T, conf.level = 0.95)
 
 	Paired t-test
