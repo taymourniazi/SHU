@@ -8,7 +8,8 @@ which design has more sale?
 ![Screenshot](Design.PNG)
 
 The T-stest of paired two sample means is execute in Excel 
-with help of data analysis feature
+with help of data analysis feature  
+
 
 The mean difference calculated by mean 172.6-159.4=13.2
 
