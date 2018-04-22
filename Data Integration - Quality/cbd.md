@@ -1,11 +1,11 @@
 /******************************/******************************//  
 /* */   
-/* DI Data Cleaning */
-/* */
-/* Example 3.1 */
-/* */
-/******************************/
-title1 'Listing of Missing Date Values';
+/* DI Data Cleaning */		
+/* */			
+/* Example 3.1 */		
+/* */		
+/******************************/		
+title1 'Listing of Missing Date Values';		
 data _null_;
 set clean.patients;
 file print;
