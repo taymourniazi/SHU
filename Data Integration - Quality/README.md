@@ -450,3 +450,31 @@ title;
           
   
   
+# Chapter 5  
+  
+    
+      
+      
+/******************************/******************************/  
+/* */  
+/* DI Data Cleaning */  
+/* */  
+/* Example 5.1 */  
+/* */  
+/******************************/  
+title 'Integrity Check for PATNO';  
+proc sort data = clean.consfile out = cons;  
+by PATNO;  
+run;  
+proc sort data = clean.patfile out = pat;  
+by PATNO;  
+run;  
+data _null_;  
+file print;  
+merge cons (in = Incons)  
+pat (in = Inpat);  
+by PATNO;  
+if (Incons and not Inpat) then  
+put 'Patient ' PATNO ' is not in the patient file!';  
+run;  
+title;  
