@@ -6,9 +6,9 @@
 /* */		
 /******************************/		
 title1 'Listing of Missing Date Values';		
-data _null_;
+data _null_;		
 set clean.patients;
-file print;
+file print;		
 if VISIT = . then put 'Obs '_N_ PATNO = 'Missing VISIT';
 run;
 title1 'Listing of Invalid (Out of Range) Date Values';
