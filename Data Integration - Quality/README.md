@@ -411,7 +411,42 @@ var PATNO VISIT;
 format VISIT date9.;  
 run;  
 title;  
-        
+  
+  
+  
+  
+  
+  
+    
+   
+# Chapter 4  
+  
+  
+      /******************************/******************************/
+/* */
+/* DI Data Cleaning */
+/* */
+/* Example 4.1 */
+/* */
+/******************************/
+title 'Listing of Observations with Duplicate PATNO Values';
+data dup;
+set clean.patients;
+Obs = _N_;
+run;
+proc sort data = dup;
+by PATNO;
+run;
+data dup;
+set dup;
+by PATNO;
+if first.PATNO and last.PATNO then delete;
+run;
+proc print data = dup;
+ID Obs;
+format VISIT date9.;
+run;
+title;
           
   
   
