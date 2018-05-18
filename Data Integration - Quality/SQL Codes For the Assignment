@@ -1,0 +1,61 @@
+use datawarehouse_assignment;
+
+create table Supplier
+(Supplier_ID int,
+Supplier_name varchar (50),
+Supplier_Address varchar (50),
+Country Varchar (50), Primary Key (Supplier_ID)
+);
+
+
+use datawarehouse_assignment;
+
+create table Customer
+(customer_ID int,
+customer_firstname varchar (50),
+customer_lastname varchar (50),
+customer_address varchar (50), primary key (Customer_ID)
+);
+
+use datawarehouse_assignment;
+
+create table Order1
+(Order_ID int,
+Order_item_number int,
+product_ID int, primary Key (Order_ID)
+);
+
+use datawarehouse_Assignment
+
+CREATE TABLE Dimdates ( 
+date_id          BIGINT PRIMARY KEY,  
+date             DATE NOT NULL, 
+timestamp        BIGINT NOT NULL,  
+weekend          CHAR(10) NOT NULL,
+day_of_week      CHAR(10) NOT NULL, 
+month            CHAR(10) NOT NULL, 
+month_day        INT NOT NULL,  
+year             INT NOT NULL, 
+week_starting_monday CHAR(2) NOT NULL, 
+);
+
+use datawarehouse_assignment;
+
+create table DimDates
+(date_ID int,
+year int,
+month int,primary key (Date_ID)
+);
+
+
+use datawarehouse_assignment;
+
+create table FactSales1
+(
+Customer_ID int Not Null references DimCustomer (Customer_ID),
+Date_ID int Not Null References Dimdates (Date_ID),
+Order_ID int Not Null references DimOrder1 (Order_ID),
+Supplier_ID int Not Null references DimSupplier (Supplier_ID),
+Quantity Smallint,
+total_retail_price decimal(12,2),
+Constraint Customer_ID Primary Key (Customer_ID, Date_ID));
