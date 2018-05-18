@@ -1,0 +1,70 @@
+
+
+/* Script to create various table for the database*/
+
+use DataWareHOuseAssignment;
+  
+  create table DimSupplier
+   (
+    Supplier_ID int,
+    Supplier_Name varchar(50),
+    Supplier_Address Varchar (50),
+    country varchar (50), Primary Key (Supplier_ID)
+    );
+    
+    use DataWareHouseAssignment;   
+    create table DimCustomer
+   (
+    Customer_ID int,
+    Customer_FirstName varchar(50),
+    Customer_LastName Varchar (50),
+    Customer_Address varchar (50), Primary Key (customer_ID)
+   );
+   
+   use DataWareHouseAssignment;    
+    create table DimOrder
+   (
+    Order_ID int,
+    Order_Item varchar(50),
+    Product_ID  int, Primary Key (Order_ID)
+   );
+   
+
+
+--create the time dimension --
+use DataWarehouseAssignment;
+  create table DimDate
+    
+    (
+      DateKey BIGINT primary key,
+      Date    Date not null,
+      Year int,
+      Month int,
+    );
+    
+-- Create the fact table -- 
+    
+      use DatawarehouseAssignment;
+        create table FactSales
+          
+          (
+            Customer_ID int not null references DimCustomer (Customer_ID),
+            DateKey BIGINT not null references DimDate (DateKey),
+            Order_ID int not null references DimOrder (Order_ID),
+            Supplier_ID int not null references DimSupplier (Supplier_ID),
+            Quantity int,
+            total_retail_price decimal(12,2),
+            Constraint Customer_ID Primary Key (Customer_ID, DateKey)
+            
+          );
+--Configuring management Studio for file import --
+
+
+use [master]
+ Go 
+   EXEC sp_configure 'show advanced option', 1
+     Reconfigure
+       Go
+         EXEC sp_configure 'Ad Hoc Distributed Queries',1
+          Reconfigure
+            GO
