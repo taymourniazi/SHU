@@ -3,7 +3,9 @@
 ## Content
 
 # Cassandra
-
+## Configure Cassandra Cluster  
+  
+    
 ./stopalldbs.sh  
 ./cassandra/cassandraconfig.sh  
 sudo service cassandra start  
@@ -12,7 +14,9 @@ thisNode=$(hostname -I)
 echo $thisNode  
 cqlsh $thisNode  
   
+## Cassandra on a Single Node  
   
+    
 desc keyspaces;  
 CREATE KEYSPACE flights_ks WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };  
 use flights_ks;  
@@ -42,6 +46,7 @@ UPDATE flightdetails
 WHERE Airline = 'BA City Flyer';  
   
   
+## Cassandra Cluster and Replication  
   
 cqlsh $thisNode  
 CREATE KEYSPACE customers_ks WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 2 };  
