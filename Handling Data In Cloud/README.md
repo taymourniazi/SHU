@@ -3,7 +3,7 @@
 ## Content
 
 # Cassandra
-## Configure Cassandra Cluster  
+### Configure Cassandra Cluster  
   
     
 ./stopalldbs.sh  
@@ -14,7 +14,7 @@ thisNode=$(hostname -I)
 echo $thisNode  
 cqlsh $thisNode  
   
-## Cassandra on a Single Node  
+### Cassandra on a Single Node  
   
     
 desc keyspaces;  
@@ -46,7 +46,7 @@ UPDATE flightdetails
 WHERE Airline = 'BA City Flyer';  
   
   
-## Cassandra Cluster and Replication  
+### Cassandra Cluster and Replication  
   
 cqlsh $thisNode  
 CREATE KEYSPACE customers_ks WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 2 };  
