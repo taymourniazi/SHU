@@ -72,3 +72,86 @@ SELECT * FROM users_table;
 cat cassandratimetest  
 cqlsh $thisNode < cassandratimetest  
 time cqlsh $thisNode < cassandratimetest  
+  
+     
+       
+         
+          
+             
+               
+                
+# Neo4j
+  
+## Content
+  
+  
+### Movies Graph database  
+  
+  
+hostname -I  
+./stopalldbs.sh  
+./neo4j/setneo4jdatabase.sh  
+sudo service neo4j start  
+http://<Cloud Data VM IP Address>:7474/browser/  
+    
+MATCH (actor)-[:ACTED_IN]->(movie)   
+RETURN actor, movie  
+  
+MATCH (actor:Person)-[:ACTED_IN]->(movie:Movie)  
+RETURN actor.name AS Actor, collect(movie.title) AS Movies  
+  
+MATCH (actor)-[:ACTED_IN]->(movie)   
+WHERE movie.title IN ['The Matrix']  
+RETURN actor, movie  
+  
+MATCH (actor)-[:ACTED_IN]->(movie)   
+WHERE movie.title IN ['The Matrix']   
+OR movie.title IN ['The Matrix Reloaded']  
+RETURN actor, movie  
+  
+// Add movie  
+CREATE (BillnTed:Movie {title:'Bill and Teds Excellent Adventure', released:1989})  
+  
+// Add new persons  
+CREATE (AlexW:Person {name:'Alex Winter', born:1965})  
+CREATE (GeorgeC:Person {name:'George Carlin', born:1937})  
+CREATE (Stephk:Person {name:'Stephen Herek', born:1958})  
+  
+// Create ACTED_IN & DIERECTED relationships  
+CREATE   
+  (AlexW)-[:ACTED_IN {roles:['Bill Preston']}]->(BillnTed),  
+  (GeorgeC)-[:ACTED_IN {roles:['Rufus']}]->(BillnTed),  
+  (Stephk)-[:DIRECTED]->(BillnTed)  
+// Retrieve Person node for Keanu Reeves who already exists  
+MATCH (p:Person {name:'Keanu Reeves'})   
+  
+// Retrieve the Movie node - just added  
+MATCH (m:Movie {title:'Bill and Teds Excellent Adventure'})  
+  
+// Create an ACTED_IN relationship between Keanu Reeves & movie  
+CREATE (p)-[:ACTED_IN {roles:['Ted Logan']}]->(m)  
+sudo service neo4j stop  
+    
+    
+       
+### Northwind Example  
+  
+    
+A)	MATCH (actor)-[:ACTED_IN]->(movie)   
+WHERE actor.name IN ['Keanu Reeves']  
+RETURN movie.title  
+  
+MATCH (actor)-[:ACTED_IN]->(movie)   
+WHERE movie.title IN ['Johnny Mnemonic']   
+RETURN actor, movie  
+  
+MATCH (cust:Customer)-[:PURCHASED]->(ord:Order)   
+RETURN DISTINCT cust.companyName as Customers, collect(ord.orderID) AS Orders  
+  
+MATCH (cust:Customer)-[:PURCHASED]->(:Order)-[o:ORDERS]->(p:Product)  
+RETURN  cust.companyName as Customers, collect(distinct p.productName) AS Products  
+  
+MATCH (cust:Customer)-[:PURCHASED]->(:Order)-[o:ORDERS]->(p:Product)  
+WHERE cust.contactName = 'Roland Mendel'  
+RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased  
+    
