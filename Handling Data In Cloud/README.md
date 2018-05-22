@@ -29,6 +29,7 @@ CREATE TABLE flightdetails
    hrs float,  
    pass int  
 );  
+  
 desc schema;  
 INSERT INTO flightdetails (Airline, Kms, Flights, Hrs, Pass) VALUES ('BA City Flyer', 300, 545, 686, 30031);  
 SELECT * FROM flightdetails;  
