@@ -74,8 +74,7 @@ cqlsh $thisNode < cassandratimetest
 time cqlsh $thisNode < cassandratimetest  
   
      
-       
-         
+            
           
              
                
