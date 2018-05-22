@@ -76,8 +76,7 @@ time cqlsh $thisNode < cassandratimetest
      
             
           
-             
-               
+                   
                 
 # Neo4j
   
