@@ -253,7 +253,11 @@ db.zipCodes.update(
 	{upsert: true}  
 )  
 db.zipCodes.drop()  
-db.dropDatabase()  
+db.dropDatabase()
+
+
+## Moving bulk data into Mongo
+
 cd mongo  
 ls -l  
 grades.json  
@@ -263,6 +267,10 @@ cat students.csv
 mongoimport --host $(hostname -I) --db studentDB --collection grades --file /home/student/mongo/grades.json  
 mongoimport --host $(hostname -I) --db studentDB --collection students --type=csv --file /home/student/mongo/students.csv --headerline    
 --fields=<field>[,<field>]...  
+	
+## Query using a reference  
+  
+  
 mongo --host $(hostname -I) --quiet  
 stu = db.students.findOne({"name": "Valentin Easton"})  
 db.grades.find({"student_id": stu._id}).pretty()  
