@@ -158,15 +158,17 @@ RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProduc
 ## Content
   
   
-### Movies Graph database
 
-
-
+### Configure MongoDB
+  
 ./stopalldbs.sh  
 ./mongo/mongoconfig.sh  
 sudo service mongod start  
 mongo --host $(hostname -I) --quiet  
 show dbs  
+  
+## CRUD Operations in MongoDB  
+  
 use location  
 zip1 = {  
 	"city": "TWENTYNINE PALMS",   
