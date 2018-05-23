@@ -153,3 +153,143 @@ MATCH (cust:Customer)-[:PURCHASED]->(:Order)-[o:ORDERS]->(p:Product)
 WHERE cust.contactName = 'Roland Mendel'  
 RETURN DISTINCT cust.contactName as CustomerName, SUM(o.quantity) AS TotalProductsPurchased  
     
+# MongDB
+  
+## Content
+  
+  
+### Movies Graph database
+
+
+
+./stopalldbs.sh  
+./mongo/mongoconfig.sh  
+sudo service mongod start  
+mongo --host $(hostname -I) --quiet  
+show dbs  
+use location  
+zip1 = {  
+	"city": "TWENTYNINE PALMS",   
+	"loc": [-116.06041, 34.237969],   
+	"pop": 11412,   
+	"state": "CA",   
+	"_id": "92278"}  
+db.zipCodes.insert(zip1)  
+WriteResult({ "nInserted" : 1 })  
+db.zipCodes.find({"_id": "92278"})  
+db.zipCodes.find()  
+db.zipCodes.find({pop: 1470})  
+db.zipCodes.remove({population: 1470})  
+zip200 = {  
+"city": "WOODBRIDGE",   
+"coordinates": [-74.284542, 40.555973],   
+"pop": 15827,   
+"state": "NJ",   
+"_id": "07095",   
+"typeoftrain": "Steam locomotive"}  
+db.getCollectionNames()  
+or  
+show collections  
+db.zipCodes.count()  
+db.zipCodes.count({pop: {$gt: 10000} })  
+db.zipCodes.find(  
+	{ $and: [  
+		{pop: {$gt : 64000}},   
+		{"_id": {$gt:"15000"}}  
+	]}  
+)  
+db.zipCodes.find(  
+	{ $and: [  
+		{pop: {$gt : 64000}},  
+		{"_id": {$gt:"15000"}}  
+	]}  
+).pretty()  
+  
+  
+  
+db.zipCodes.find(  
+	{ $or: [  
+		{ pop: {$gt : 64000}},   
+		{ "_id": {$gt:"96000"}}  
+	]}  
+)  
+var pop_range = {$gt: 60000, $lt: 70000}  
+db.zipCodes.find({ "pop" :  pop_range }).limit(10)  
+db.zipCodes.find( { state: { $in: [ "NY", "CT"] } } )  
+db.zipCodes.find().sort({city: 1}).limit(10)  
+db.zipCodes.find().sort({pop: -1}).limit(5)  
+db.zipCodes.find({typeoftrain: {$exists: true} })  
+db.zipCodes.ensureIndex({pop: -1 })  
+db.zipCodes.getIndexes()  
+db.zipCodes.dropIndex({pop: -1})  
+db.zipCodes.update(  
+	{"_id": "07095"},   
+	{ $set: {"typeoftrain": "electric locomotives"}}  
+)  
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })  
+db.zipCodes.update(  
+	{"_id": "07095"},   
+	{ $rename: {"typeoftrain": "trainType"}}  
+)  
+db.zipCodes.update(   
+	{"_id": "07095"},   
+	{$set: {"trackLine": "Single"}}  
+)  
+db.zipCodes.update(  
+	{"_id": "07095"},   
+	{ $unset: { "trainType": "", "trackLine": "" }}  
+)  
+db.zipCodes.update(  
+	{"_id": "08732"},   
+	{  
+		"city": "ISLAND HEIGHTS",   
+		"loc": [-74.146787, 39.943197],   
+		"pop": 1470,   
+		"state": "NJ",   
+		"_id": "08732"  
+	},   
+	{upsert: true}  
+)  
+db.zipCodes.drop()  
+db.dropDatabase()  
+cd mongo  
+ls -l  
+grades.json  
+students.csv  
+cat grades.json  
+cat students.csv  
+mongoimport --host $(hostname -I) --db studentDB --collection grades --file /home/student/mongo/grades.json  
+mongoimport --host $(hostname -I) --db studentDB --collection students --type=csv --file /home/student/mongo/students.csv --headerline    
+--fields=<field>[,<field>]...  
+mongo --host $(hostname -I) --quiet  
+stu = db.students.findOne({"name": "Valentin Easton"})  
+db.grades.find({"student_id": stu._id}).pretty()  
+db.students.aggregate( [  
+	{$match: { _id: 1} },  
+	{$lookup: {  
+		from: "grades",   
+		localField: "_id",  
+		foreignField: "student_id",  
+		as: "grades"}}  
+] ).pretty()  
+{  
+   $lookup:  
+   {  
+      from: <collection to join>,  
+      localField: <field from the input documents>,  
+      foreignField: <field in documents of "from" collection>,  
+      as: <output array field>  
+   }  
+}  
+cat > mongotimetest  
+use studentDB  
+db.students.find().sort({age: -1}).limit(5)  
+cat mongotimetest  
+mongo --host $(hostname -I) --quiet < mongotimetest  
+time mongo --host $(hostname -I) --quiet < mongotimetest  
+hostname -I  
+  
+    
+      
+        
+        
