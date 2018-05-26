@@ -304,3 +304,10 @@ hostname -I
         
         
   
+# Oracle APEX - GUI Environment (SQL PLUS)  
+## Performance Tuning  
+  
+select a.cityname, b.countryname
+from cities a, countries b
+where b.isocode = a.countrycode
+Order By a.cityname ;
