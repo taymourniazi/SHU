@@ -307,7 +307,94 @@ hostname -I
 # Oracle APEX - GUI Environment (SQL PLUS)  
 ## Performance Tuning  
   
-select a.cityname, b.countryname
-from cities a, countries b
-where b.isocode = a.countrycode
-Order By a.cityname ;
+select a.cityname, b.countryname  
+from cities a, countries b  
+where b.isocode = a.countrycode  
+Order By a.cityname ;  
+  
+    
+select a.cityname, b.countryname  
+from cities a, countries b  
+where b.isocode = a.countrycode  
+and b.countryname = 'United Kingdom'  
+Order By a.cityname ;  
+  
+  
+select a.cityname, b.countryname  
+from cities a, countries b  
+where b.isocode = a.countrycode  
+and a.population > 1000000  
+and a.cityname like 'Z%'  
+and b.countryname <> 'China' ;  
+  
+  
+select /*+ FIRST_ROWS(2) */ a.cityname, b.countryname  
+from cities a, countries b   
+where b.isocode = a.countrycode  
+and a.population > 1000000  
+and a.cityname like 'Z%'  
+and b.countryname <> 'China' ;  
+  
+  
+select * from bigtab1  
+where created_date < '01-Jun-2014' ;  
+  
+  
+SET TIMING ON  
+  
+CREATE TABLE mybig as SELECT * from bigtab1 ;  
+  
+  
+select * from mybig where created_date < '01-Jun-2014' ;  
+  
+  
+Create Index cdate on mybig(created_date) ;  
+  
+  
+select * from mybig where lookup id = 2 ;  
+  
+  
+select * from mybig where id between 6677 and 7777 ;  
+  
+  
+create index idindex on mybig(id) ;  
+  
+create bitmap index lookupB on mybig(lookup_id) ;  
+select * from mybig where lookup id = 2 ;  
+  
+  
+-- template testbed script  
+-- stop displaying output to the monitor as this slows things down  
+SET TERMOUT OFF  
+-- start the STAT trace  
+SET AUTOTRACE ON STAT  
+--spool the output to a file for future ref  
+SPOOL f:\tutorials\testresults.txt  
+--start the timer  
+Timing START timer1  
+-- call the SQL script containing the test DML/DDL  
+START f:\tutorials\testme  
+--stop timer  
+Timing STOP timer1  
+SET TERMOUT ON  
+SET AUTOTRACE OFF  
+SPOOL off  
+  
+  
+start f:\tutorials\test_template  
+  
+-- IOT must have a primary key  
+CREATE TABLE CDSIOT(CDID Integer NOT NULL,  
+TITLE VARCHAR2(50) NOT NULL,  
+CONDUCTOR VARCHAR2(30),  
+ORCHESTRA VARCHAR2(30),  
+COMPOSERID Integer NOT NULL,  
+PRIMARY KEY(CDID),  
+FOREIGN KEY(COMPOSERID) REFERENCES COMPOSERS(COMPOSERID))  
+ORGANIZATION INDEX ;  
+  
+  
+INSERT INTO CDSIOT  
+SELECT cdid, Title, Conductor, Orchestra, composerid  
+FROM CDS ;  
+  
