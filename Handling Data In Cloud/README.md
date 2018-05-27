@@ -1,6 +1,6 @@
 # CodesPractice
 
-## Content
+## Content 
 
 # Cassandra
 ### Configure Cassandra Cluster  
