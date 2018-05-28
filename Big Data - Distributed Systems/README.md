@@ -2,8 +2,8 @@
 ## Acquiring, Manipulating Data in Hadoop, Hive, Pig (Hue) - Wordcount program
   
     
-run Hadoop and pass it some parameters that tell it to do the wordcount. We will have to type the  
-command very precisely. The first word is hadoop, to call the hadoop executable. The parameters  
+run Hadoop and pass it some parameters that tell it to do the wordcount.  
+The first word is hadoop, to call the hadoop executable. The parameters   
 that follow in this case are:    
 • jar – to tell hadoop to run a jar file  
 • the location and filename of the jar file that hadoop should run  
