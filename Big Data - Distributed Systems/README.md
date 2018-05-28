@@ -20,18 +20,22 @@ wordcount /user/hue/tutorials/4300.txt /user/hue/tutorials/UlyssesOutput
 ## HCatalog, Hive and Pig – World Airports Dataset  
 ### Hive Query Language  
   
-    
+  
+#### How many Heliports are there in India?
+  
 select * from airports  
 where iso_country = "IN"  
 AND type = "heliport" ;  
   
     
+#### Count of heliports in India. 
       
 select count(*) as Number from airports  
 where iso_country = "IN"  
 AND type = "heliport" ;  
   
     
+#### How many heliports there are in each country?
       
 select iso_country as CountryCode, count(ident) as NumberofHeliports  
 from airports  
@@ -39,12 +43,16 @@ where type = "heliport"
 Group By iso_country ;  
   
     
+#### Which large airport in India is at the highest elevation
+    
 select name, elevation_ft from airports  
 where iso_country = "IN"  
 AND type = "large_airport" ;  
   
     
-      
+     
+#### ORDER BY clause to present the data return above in sorted order
+     
 select name, elevation_ft from airports  
 where iso_country = "IN"  
 AND type = "large_airport"  
