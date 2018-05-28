@@ -17,3 +17,35 @@ So the full command we need to type into the PuTTY session is:
 hadoop jar /usr/hdp/2.2.0.0-2041/hadoop-mapreduce/hadoop-mapreduce-examples.jar  
 wordcount /user/hue/tutorials/4300.txt /user/hue/tutorials/UlyssesOutput  
   
+## HCatalog, Hive and Pig – World Airports Dataset  
+### Hive Query Language  
+  
+    
+select * from airports  
+where iso_country = "IN"  
+AND type = "heliport" ;  
+  
+    
+      
+select count(*) as Number from airports  
+where iso_country = "IN"  
+AND type = "heliport" ;  
+  
+    
+      
+select iso_country as CountryCode, count(ident) as NumberofHeliports  
+from airports  
+where type = "heliport"  
+Group By iso_country ;  
+  
+    
+select name, elevation_ft from airports  
+where iso_country = "IN"  
+AND type = "large_airport" ;  
+  
+    
+      
+select name, elevation_ft from airports  
+where iso_country = "IN"  
+AND type = "large_airport"  
+ORDER BY elevation_ft ;  
