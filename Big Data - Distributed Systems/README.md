@@ -20,7 +20,7 @@ wordcount /user/hue/tutorials/4300.txt /user/hue/tutorials/UlyssesOutput
 ## HCatalog, Hive and Pig – World Airports Dataset  
   
     
-## Hive Query Language  
+# Hive Query Language  
   
   
 #### How many Heliports are there in India?
@@ -114,5 +114,94 @@ Group by C.countryname ;
 ## PIG - Data Manipulatio Tool for Hadoop  
   
     
+allairports = LOAD 'default.airports' USING org.apache.hive.hcatalog.pig.HCatLoader();
+DUMP 'allairports';
+
       
+     
+### Filtering in PIG  
+  
+    
+#### Take allairports and restrict its contents to airports in Great Britain (GB country code).   
+  
+    
+allairports = LOAD 'airports' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+gbairports = filter allairports by iso_country == 'GB' ;  
+DUMP gbairports ;  
+  
+    
       
+### Outputting to file from Pig  
+   
+allairports = LOAD 'airports' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+gbairports = filter allairports by iso_country == 'GB' ;  
+gbcols = FOREACH gbairports GENERATE $13, $3, $6 ; ;  
+STORE gbcols INTO '/user/hue/tutorials/GBData' USING PigStorage(',');  
+  
+    
+#### To AND filtering conditions together and excludes records with no IATA code  
+
+gbairports = filter allairports by (iso_country == 'GB') AND NOT (iata_code == '') ;
+  
+  
+### Joining and Sorting in Pig  
+  
+    
+      
+#### Which GB Airports are in the Top 100 and then present them in a sorted order  
+  
+    
+allairports = LOAD 'airports' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+gbairports = filter allairports by (iso_country == 'GB') AND NOT (iata_code == '') ;  
+gbcols = FOREACH gbairports GENERATE $13 as iata, $3 as airportname ;  
+T100 = LOAD 'top100' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+Some100 = FOREACH T100 GENERATE $2 as T_iata, $6 as passengers2011 ;  
+JoinData = JOIN gbcols BY (iata), Some100 BY (T_iata);  
+SortJoined = ORDER JoinData BY passengers2011 DESC ;  
+Dump SortJoined ;  
+  
+    
+### Using Inbuilt functions  
+  
+  
+#### Group By Function
+  
+#### How many passengers there were in 2011 across all three London airports?  
+  
+     
+T100 = LOAD 'top100' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+  
+-- Removing everything to the right of the open bracket in the airport-location field  
+  
+Some100 = FOREACH T100 GENERATE TRIM(SUBSTRING($4, 0, INDEXOF($4, '(', 0))) as cityname, (ROUND($6/1000)) as Kpass2011 ;  
+  
+-- summing up passenger numbers by cityname  
+  
+G100 = FOREACH (GROUP Some100 BY cityname) GENERATE group, SUM(Some100.Kpass2011);  
+Dump G100 ;  
+  
+### Loading data from files  
+  
+  
+#### Use Load to bring data in directly in from a CSV file and use it in a Pig query.  
+  
+gb = LOAD '/user/hue/tutorials/GBData/part-m-00000' USING PigStorage(',') ;
+dump gb ;  
+  
+#### reintroduce the argument if you also read from HCatalog, a join with Top 100  
+  
+gb = LOAD '/user/hue/tutorials/GBData/part-m-00000' USING PigStorage(',') AS  
+(iatacode: chararray, name: chararray, elevation: int) ;  
+T100 = LOAD 'top100' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+Some100 = FOREACH T100 GENERATE $2 as T_iata, $6 as passengers2011 ;  
+JoinData = JOIN gb BY (iatacode), Some100 BY (T_iata);  
+Dump JoinData  
+  
+    
+### JSON formatted data  
+  
+#### The Current Weather For London  
+   
+     
+       
+       
