@@ -202,6 +202,30 @@ Dump JoinData
   
 #### The Current Weather For London  
    
+##### londonweather.json     
+       
+{"coord":{"lon":-0.13,"lat":51.51},"sys":  
+{"type":3,"id":60992,"message":0.0107,"country":"GB","sunrise":1424329544,"sunset":142436657  
+1},"weather":[{"id":500,"main":"Rain","description":"light rain","icon":"10d"}],"base":"cmc  
+stations","main":  
+{"temp":280.45,"humidity":84,"pressure":1019.4,"temp_min":280.45,"temp_max":280.45},"wind":  
+{"speed":1,"gust":4.5,"deg":270},"rain":{"3h":2},"clouds":  
+{"all":92},"dt":1424356829,"id":2643743,"name":"London","cod":200}    
+   
+##### loading the data into Pig, need to provide schema that describes the incoming data and pass that schema as a parameter.  
      
-       
-       
+jdata = LOAD '/user/hue/tutorials/londonweather.json' USING JsonLoader('coord:  
+(lon:double,lat:double), sys:(type:int,id:long, message:double, country: chararray, sunrise:  
+double, sunset: double), weather:{(idd: long, main: chararray, desc: chararray, icon: chararray)},  
+base: chararray, maindata: (temp: double, humidity: int, pressure: double, tempmin: double,  
+tempmax:double), wind: (speed: double, gust: double, degr: int), rain: (hh: int), clouds: (all: int),  
+dt: long, iddd: long, placename: chararray,cod: int') ;  
+  
+    
+##### the schema allows to work with particular data items
+  
+    
+tt = FOREACH jdata GENERATE placename, weather.descr ;  
+dump tt ;  
+  
+  
