@@ -18,7 +18,9 @@ hadoop jar /usr/hdp/2.2.0.0-2041/hadoop-mapreduce/hadoop-mapreduce-examples.jar
 wordcount /user/hue/tutorials/4300.txt /user/hue/tutorials/UlyssesOutput  
   
 ## HCatalog, Hive and Pig – World Airports Dataset  
-### Hive Query Language  
+  
+    
+## Hive Query Language  
   
   
 #### How many Heliports are there in India?
@@ -56,7 +58,61 @@ AND type = "large_airport" ;
 select name, elevation_ft from airports  
 where iso_country = "IN"  
 AND type = "large_airport"  
-ORDER BY elevation_ft ;  
- 
- 
- 
+ORDER BY elevation_ft ;   
+   
+   
+ #### which was THE highest airport in SQL  
+   
+select name, elevation_ft from airports  
+where elevation_ft =  
+(select max(elevation_ft) from airports  
+where iso_country = "IN"  
+AND type = "large_airport" ) ;  
+       
+         
+           
+  
+ #### which was THE highest airport in HIVEQL  
+   
+      
+FROM airports  
+JOIN  
+( SELECT Max(elevation_ft) AS maxelevation  
+FROM airports  
+WHERE iso_country = "IN"  
+AND type = "large_airport"  
+) maxdata  
+ON airports.elevation_ft = maxdata.maxelevation  
+WHERE iso_country = "IN" ;  
+  
+#### JOIN Tables  
+  
+select A.name, B.passengers_2011  
+from airports A, Top100 B  
+where A.iata_code = B.code ;  
+  
+#### For each country, how many airports appear in the Top 100 list?     
+       
+select A.iso_country, count(A.iata_code) as NumberofAirportsinTop100  
+from airports A, Top100 B  
+where A.iata_code = B.code  
+Group by A.iso_country ;  
+  
+    
+        
+#### A three-way join so that the output has country name instead of the code.  
+    
+      
+select C.countryname, count(A.iata_code) as NumberofAirportsinTop100  
+from airports A, Top100 B, countrycodes C  
+where A.iata_code = B.code  
+AND A.iso_country = C.countrycode  
+Group by C.countryname ;  
+  
+# Using Pig  
+   
+## PIG - Data Manipulatio Tool for Hadoop  
+  
+    
+      
+      
