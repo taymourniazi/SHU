@@ -245,4 +245,41 @@ dt: long, iddd: long, placename: chararray,cod: int') ;
 tt = FOREACH jdata GENERATE placename, weather.descr ;  
 dump tt ;  
   
+ ## Running Pig from the Command Line  
+   
+yum install -y nano  
   
+mkdir pigscripts  
+  
+cd pigscripts  
+  
+nano itairports.pig  
+  
+allairports = LOAD 'airports' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+itairports = filter allairports by (iso_country == 'IT') AND NOT (iata_code == '') ;  
+itcols = FOREACH itairports GENERATE $13, $3, $6 ; ;  
+STORE itcols INTO '/user/maria_dev/tutorials/ITData' USING PigStorage(',');  
+  
+    
+pig -useHCatalog  
+  
+hadoop fs -get /user/maria_dev/tutorials/ITData/part-m-00000 ./  
+  
+#### cat command to view the content of the file
+cat part-m-00000  
+  
+## Writing UDFs (User Defined Functions)  
+  
+fttom.outputSchema = "meters:float";  
+function fttom(num){  
+return num/3.281;  
+}  
+  
+-- Calling a javascript function so need to register it  
+Register '/usr/hdp/2.4.0.0-169/jsstuff.js' using javascript as jsstuff;  
+allairports = LOAD 'airports' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+elemeters = FOREACH allairports GENERATE $3, jsstuff.fttom($6) as M ;  
+dump elemeters ;  
+  
+#### Same output using Pig alone    
+elemeters = FOREACH allairports GENERATE $3, $6/3.281 as M
