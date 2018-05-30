@@ -283,3 +283,46 @@ dump elemeters ;
   
 #### Same output using Pig alone    
 elemeters = FOREACH allairports GENERATE $3, $6/3.281 as M
+
+
+# Usimg Sqoop to share data between hadoop and other databases
+## Starting MySQL
+chkconfig --levels 235 mysqld on  
+  
+service mysqld start  
+mysql -u root  
+  
+###  Create Databse in sandbox terminal
+  
+CREATE DATABASE forhadoop;  
+  
+### Allow full access to forhadoop database  
+  
+GRANT ALL PRIVILEGES ON forhadoop.* TO root@localhost IDENTIFIED BY '1111';  
+  
+mysql -u root -p  
+connect forhadoop  
+  
+### Creates country code table in Mysql  
+  
+create table countrycodes(ccode char(2), country_name varchar(30), PRIMARY KEY (ccode));  
+desc countrycodes;  
+  
+#### CSV Out from Hadoop to local system  
+hadoop fs copyToLocal hdfs://192.168.8.13.13.130/user/maria_dev/tutorials/countrycode.csv /root/countrycode.csv  
+  
+#### Using a file from the local system  
+mysql forhadoop --local_infile=1 -u root -p
+  
+#### Loading Data in Mysql Database  
+  
+LOAD DATA LOCAL INFILE '/root/countrycode.csv' INTO TABLE countrycodes fields terminated by ',' LINES TERMINATED BY '\r\n';  
+  
+## Installing sqoop from command line  
+  
+yum install sqoop  
+yum install mysql-connector-java  
+  
+## Importing from MySQL to Hadoop  
+  
+  
