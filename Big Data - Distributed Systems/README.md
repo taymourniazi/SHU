@@ -109,6 +109,23 @@ where A.iata_code = B.code
 AND A.iso_country = C.countrycode  
 Group by C.countryname ;  
   
+    
+#### Create a table to accept the data  
+  
+    
+Create Table T100 (  
+rank INT,  
+reg STRING,  
+code STRING,  
+airport STRING,  
+airport_location STRING ,  
+passengers_2011 INT,  
+passengers_2010 INT,  
+change DOUBLE )  
+ROW FORMAT DELIMITED  
+FIELDS TERMINATED BY ","  
+ESCAPED BY '"' ;  
+    
 # Using Pig  
    
 ## PIG - Data Manipulatio Tool for Hadoop  
