@@ -325,4 +325,43 @@ yum install mysql-connector-java
   
 ## Importing from MySQL to Hadoop  
   
+    
+sqoop import --connect jdbc:mysql://localhost:3306/forhadoop --driver com.mysql.jdbc.Driver --  
+username root --password 1111 --table countrycodes --target-dir /user/maria_dev/tutorials/frommysql  
   
+#### Save MySQL data directly into Hive table one step by changing the final parameter and running the hive-import command  
+  
+sqoop import --connect jdbc:mysql://localhost:3306/forhadoop --driver com.mysql.jdbc.Driver --  
+username root --password 1111 --table countrycodes --hive-import --hive-table default.ccodes  
+  
+#### Multiple tables in a MySQL database we can chose to bring them all into hive  
+  
+sqoop import-all-tables --connect jdbc:mysql://localhost:3306/forhadoop --username root --password 1111 –hive-import  
+  
+#### Selective about which rows to import using the –where parameter, it only import codes beginning with the letter U  
+  
+sqoop import --connect jdbc:mysql://localhost:3306/forhadoop --driver com.mysql.jdbc.Driver --  
+username root --password 1111 --table countrycodes --where 'left(ccode,1)="U"' --hive-import --hivetable  
+default.Ucodes  
+  
+## Exporting from Hadoop to MySQL  
+  
+allairports = LOAD 'airports' USING org.apache.hive.hcatalog.pig.HCatLoader();  
+gbairports = filter allairports by iso_country == 'GB' ;  
+gbcols = FOREACH gbairports GENERATE $13, $3, $6 ;  
+STORE gbcols INTO '/user/hue/tutorials/GBData' USING PigStorage(',');  
+  
+#### Log into MySQL and create the table  
+  
+mysql forhadoop -u root -p  
+use forhadoop ;  
+create table gb2 (iata char(3), airport_name varchar(30), ele int, PRIMARY KEY (iata)) ;  
+desc gb2 ;  
+exit  
+  
+#### Use Sqoop export to take the data from hdfs and insert it into the MySQL table  
+  
+sqoop export --connect jdbc:mysql://localhost:3306/forhadoop --driver com.mysql.jdbc.Driver --  
+username root --password 1111 --table gb2 --export-dir /user/maria_dev/tutorials/GBData  
+  
+select * from gb ;  
