@@ -284,7 +284,8 @@ dump elemeters ;
 #### Same output using Pig alone    
 elemeters = FOREACH allairports GENERATE $3, $6/3.281 as M
 
-
+#SQOOP  
+  
 # Usimg Sqoop to share data between hadoop and other databases
 ## Starting MySQL
 chkconfig --levels 235 mysqld on  
@@ -365,3 +366,29 @@ sqoop export --connect jdbc:mysql://localhost:3306/forhadoop --driver com.mysql.
 username root --password 1111 --table gb2 --export-dir /user/maria_dev/tutorials/GBData  
   
 select * from gb ;  
+  
+# Nifi
+  
+## Getting Nifi working  
+  
+curl -o install-nifi.sh https://raw.githubusercontent.com/hortonworks/tutorials/hdp/assets/realtime-event-processing/install-nifi.sh  
+  
+chmod +x ./install-nifi.sh  
+#### get the tar file  
+wget http://d3d0kdwqv675cq.cloudfront.net/HDF/centos6/1.x/updates/1.2.0.1/HDF-1.2.0.1-1.tar.gz  
+tar -xvf HDF-1.2.0.1-1.tar.gz  
+cd /root/HDF-1.2.0.1-1/nifi/conf  
+nano nifi.properties  
+#### change the port from 8080 to 8090 (Under the Web Properties section)  
+nifi.web.http.port=8090  
+bin/nifi.sh install  
+Service nifi installed  
+service nifi start  
+service nifi status  
+  
+#### To move the countrycodes.csv onto Linux:  
+hadoop fs -get /user/maria_dev/tutorials/countrycode.csv /tmp/nifi/input/  
+  
+# Use the countrycode.csv and turn it into json format.  
+  
+  
