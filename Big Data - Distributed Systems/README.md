@@ -2,7 +2,7 @@
 ## Acquiring, Manipulating Data in Hadoop, Hive, Pig (Hue) - Wordcount program
   
     
-run Hadoop and pass it some parameters that tell it to do the wordcount.  
+Run Hadoop and pass it some parameters that tell it to do the wordcount.  
 The first word is hadoop, to call the hadoop executable. The parameters   
 that follow in this case are:    
 • jar – to tell hadoop to run a jar file  
@@ -389,6 +389,120 @@ service nifi status
 #### To move the countrycodes.csv onto Linux:  
 hadoop fs -get /user/maria_dev/tutorials/countrycode.csv /tmp/nifi/input/  
   
-# Use the countrycode.csv and turn it into json format.  
+#### Use the countrycode.csv and turn it into json format.  
+  
+  
+# Hadoop Using PIG  
+    
+#### Load input data from local input directory  
+A = LOAD 'wasbs:///example/data/gutenberg/davinci.txt';  
+#### TOKENIZE splits the line into a field for each word.  
+#### flatten will take the collection of records returned by  
+#### Parse and clean input data  
+B = FOREACH A GENERATE FLATTEN(TOKENIZE((chararray)$0)) AS word;  
+C = FILTER B BY word MATCHES '\\w+';  
+  
+#### Explicit the GROUP-BY: group them together by each word.  
+D = GROUP C BY word;  
+  
+#### Generate output data in the form: <word, counts>  
+E = FOREACH D GENERATE group, COUNT(C);  
+  
+#### Store output data in local output directory  
+STORE E INTO 'wasbs:///example/data/wordCount1';  
+  
+# Java MapReduce  
+  
+yarn jar wordcountjava-1.0-SNAPSHOT.jar  
+org.apache.hadoop.examples.WordCount  
+wasbs:///example/data/gutenberg/davinci.txt  
+wasbs:///example/data/wordcountout3  
+  
+#### view the results  
+  
+hdfs dfs -cat wasbs:///example/data/wordcountout3/*  
+  
+    
+## Using pig functions to transform the data  
+  
+/*  
+Load stop words  
+*/  
+stop_words_list = LOAD  
+'wasbs:///example/data/gutenberg/stopwords.txt' USING PigStorage();  
+stopwords = FOREACH stop_words_list GENERATE  
+FLATTEN(TOKENIZE($0));  
+  
+/*  
+Load the document corpus and tokenize to extract the words  
+*/  
+doc1 = LOAD  
+'wasbs:///example/data/gutenberg/comp.txt' AS (words:chararray);  
+docWords1 = FOREACH doc1 GENERATE FLATTEN(TOKENIZE(words)) AS  
+word;  
+  
+/*  
+Combine the contents of the relations docWords1 and docWords2  
+*/  
+combined_docs = docWords1;  
+/*  
+Convert to lowercase, remove stopwords, punctuations, spaces, numbers.  
+Replace nulls with the value "dummy string"  
+*/  
+lowercase_data = FOREACH combined_docs GENERATE  
+FLATTEN(TOKENIZE(LOWER($0))) as word;  
+joind = JOIN stopwords BY $0 RIGHT OUTER, lowercase_data BY $0;  
+stop_words_removed = FILTER joind BY $0 IS NULL;  
+punctuation_removed = FOREACH stop_words_removed  
+{  
+replace_punct = REPLACE($1,'[\\p{Punct}]','');  
+replace_space = REPLACE(replace_punct,'[\\s]','');  
+replace_numbers = REPLACE(replace_space,'[\\d]','');  
+GENERATE replace_numbers AS replaced_words;  
+}  
+replaced_nulls = FOREACH punctuation_removed GENERATE  
+(SIZE($0) > 0 ? $0 : 'dummy string') as word;  
+  
+B = FOREACH replaced_nulls GENERATE FLATTEN(TOKENIZE((chararray)$0)) AS word;  
+  
+C = FILTER B BY word MATCHES '\\w+';  
+/* Explicit the GROUP-BY: group them together by each word.*/  
+D = GROUP C BY word;  
+  
+/* Generate output data in the form: <word, counts> */  
+E = FOREACH D GENERATE group, COUNT(C);  
+DUMP E;  
+  
+# Pig User Defined Functions (UDF)
+### Basic Python UDF  
+  
+pig/udfs/my_first_udf.py
+
+from pig_util import outputSchema
+@outputSchema('value:int') 
+def return_one():
+   """
+   Return the integer value 1
+   """
+   return 1
+  
+#### Pig script registers the Python UDF and calls the return_one() function in a FOREACH statement  
+  
+REGISTER '/home/hduser/udf/my_first_udf.py' USING streaming_python AS pyudfs;  
+A = LOAD 'wasbs:///example/data/gutenberg/davinci.txt';  
+B = FOREACH A GENERATE pyudfs.return_one();  
+STORE B INTO 'wasbs:///example/data/wordCount7';  
+  
+
+#### 1) EVAL UDFs  
+    
+REGISTER '/home/hduser/udf/upper.py' USING streaming_python AS my_udfs;  
+users = LOAD 'user_data' AS (name: chararray);  
+upper_users = FOREACH users GENERATE my_udfs.to_upper_case(name);  
+  
+#### 2) Filter UDFs  
+  
+user_messages = LOAD 'user_twits' AS (name:chararray, message:chararray);  
+rude_messages = FILTER user_messages by my_udfs.contains_negative_words(message);  
   
   
